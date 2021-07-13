@@ -36,11 +36,12 @@ Aucune dépendance à d'autres rôles Ansible.
 Example Playbook
 ----------------
 
+```
 - name: "Deployer un serveur Jitsi Meet via Docker Compose"
   hosts: 
     - all
   vars:
-    # Supplanter ici les variables du role 'jitsi-meet-docker' au besoin
+    # Supplanter ici les variables du role 'ansible-docker-jitsi-role' au besoin
     utilisateur_unix: "jitsi442"
     fuseau_horaire: "UTC-5"
     url_publique: "https://jitsi.unvraidomaine.org"
@@ -54,7 +55,8 @@ Example Playbook
         state: present
       become: yes
   roles:
-    - jitsi-meet-docker
+    - ansible-docker-jitsi-role
+```
 
 License
 -------
