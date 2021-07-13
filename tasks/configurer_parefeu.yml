@@ -1,0 +1,25 @@
+---
+- name: "Ouvrir les ports tcp (ssh, http, https, etc.)"
+  ufw:
+    rule: allow
+    proto: tcp
+    port: '{{ item }}'
+  loop:
+    - '22'
+    - '80'
+    - '443'
+    - '4443'
+  become: yes
+
+- name: "Ouvrir le port udp 10000 pour jvb"
+  ufw:
+    rule: allow
+    proto: udp
+    port: '10000'
+  become: yes
+
+- name: "Activer ufw au besoin"
+  ufw:
+    name: ufw
+    state: enabled
+  become: yes

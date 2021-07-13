@@ -1,0 +1,18 @@
+---
+# defaults file for jitsi-meet-docker
+
+version: "stable-5963"
+utilisateur_unix: "jitsi943"
+repertoires_config: "['~/.jitsi-meet-cfg/web', '~/.jitsi-meet-cfg/web/letsencrypt', '~/.jitsi-meet-cfg/transcripts', '~/.jitsi-meet-cfg/prosody', '~/.jitsi-meet-cfg/prosody/config', '~/.jitsi-meet-cfg/prosody/prosody-plugins-custom', '~/.jitsi-meet-cfg/jicofo', '~/.jitsi-meet-cfg/jvb', '~/.jitsi-meet-cfg/jigasi', '~/.jitsi-meet-cfg/jibri']"
+
+# Variables du fichier .env du projet docker-compose de Jitsi Meet
+port_http: "80"
+port_https: "443"
+fuseau_horaire: "UTC"
+url_publique: "https://jitsi.mondomaine.net"
+letsencrypt: "1"
+letsencrypt_domaine: "jitsi.mondomaine.net"
+letsencrypt_courriel: "un_nom@mondomaine.net"
+redir_http: "1"
+hsts: "1"
+

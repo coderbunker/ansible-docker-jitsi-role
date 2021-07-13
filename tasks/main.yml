@@ -1,0 +1,57 @@
+---
+# tasks file for jitsi-meet-docker
+
+# Il s'agit ici d'automatiser la série d'étapes du guide officiel
+# https://jitsi.github.io/handbook/docs/devops-guide/devops-guide-docker
+
+- name: "Ajouter l'utilisateur Unix qui exécutera docker/docker-compose"
+  user:
+    name: "{{ utilisateur_unix }}"
+    groups: docker
+    append: yes
+  become: yes
+    
+- name: "Télécharger et décompresser les fichiers du projet Docker Composer de Jitsi Meet"
+  unarchive: 
+    src: "https://github.com/jitsi/docker-jitsi-meet/archive/refs/tags/{{ version }}.tar.gz"
+    dest: "/home/{{ utilisateur_unix }}"
+    remote_src: yes
+  become: yes
+  become_user: "{{ utilisateur_unix }}"
+
+- name: "Configurer le fichier .env du projet Docker Composer de Jitsi Meet"
+  template:
+    src: "env.j2"
+    dest: "/home/{{ utilisateur_unix }}/docker-jitsi-meet-{{ version }}/.env"
+    owner: "{{ utilisateur_unix }}"
+    group: "{{ utilisateur_unix }}"
+    mode: 0644
+  become: yes
+
+# À FAIRE : rendre optionnel ?
+- name: "(Re)générer des mots de passes fort avec le script fournit"
+  command: ./gen-passwords.sh
+  args:
+    chdir: /home/{{ utilisateur_unix }}/docker-jitsi-meet-stable-5963/
+  become: yes
+  become_user: "{{ utilisateur_unix }}"
+
+- name: "Ajouter les répertoires de configuration nécessaires" 
+  file:
+    path: "{{ item }}"
+    state: directory
+  loop: "{{ repertoires_config }}"
+  become: yes
+  become_user: "{{ utilisateur_unix }}"
+  
+- name: "Configurer le parefeu (ufw)"
+  include: configurer_parefeu.yml
+
+# À FAIRE : convertir en handler / redémarrer uniquement si .env a changé
+- name: "Redémarrer les services via docker-compose (sans rebâtir)"
+  docker_compose:
+    project_src: "/home/{{ utilisateur_unix }}/docker-jitsi-meet-{{ version }}"
+    state: present
+    restarted: yes
+  become: yes
+  become_user: "{{ utilisateur_unix }}"
